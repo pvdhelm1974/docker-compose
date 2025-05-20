@@ -1,0 +1,56 @@
+#update de server
+
+sudo apt-get update
+
+# installeer een paar pakketjes die hard nodig zijn!!
+
+sudo apt-get install \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release
+
+# Download Docker
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Update Docker
+
+sudo apt-get update
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+
+# Test de Docker installatie!
+
+sudo docker run hello-world
+
+# Maak een group aanvoor jouw gebruikersnaam in Ubuntu en test de docker container
+
+sudo groupadd docker
+sudo usermod -aG docker $USER
+docker run hello-world
+
+# Installeer Docker-compose
+
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+# Geef je gebruikersnaam toegang tot de /opt folder en alle onderliggende folders
+
+chown patrick:patrick opt
+cd /opt
+
+# Berwerk de docker-compose.yaml file.  (opslaan is 'esc' en daarna ':wq')
+
+vim docker-compose.yaml
+
+## HACS insalleren in home assistant!
+
+docker exec -it homeassistant-test bash
+wget -q -O - https://install.hacs.xyz | bash -
+
