@@ -1,0 +1,88 @@
+services:
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    restart: always
+    ports:
+      - "9000:9000/tcp"
+    environment:
+      - TZ=Europe/Amsterdam
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data
+  
+## Home Automation ##
+
+# Home Assistant
+
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - /opt/homeassistant/config:/config
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+
+# Z-Wave JS server
+
+#  zwavejs2mqtt:
+#    container_name: zwavejs2mqtt
+#    image: zwavejs/zwavejs2mqtt:latest
+#    restart: always
+#    tty: true
+#    stop_signal: SIGINT
+#    environment:
+#      - SESSION_SECRET=P@tr!ck74!@#
+#      - ZWAVEJS_EXTERNAL_CONFIG=/usr/src/app/store/.config-db
+#    devices:
+#      - /dev/ttyUSB0
+#    volumes:
+#     - /opt/z-wave-js/:/usr/src/app/store
+#    ports:
+#      - "8091:8091" # port for web interface
+#      - "3000:3000" # port for Z-Wave JS websocket server
+
+
+## Network ##
+
+# Unifi Controller
+
+  unifi-controller:
+    image: jacobalberty/unifi:latest
+    container_name: unifi-controler
+    volumes:
+      - /opt/unifi-controller/config:/config
+    ports:
+      - 8443:8443
+      - 3478:3478/udp
+      - 10001:10001/udp
+      - 8080:8080
+    restart: unless-stopped
+
+# PiHole server
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
+    environment:
+      TZ: 'Europe/Amsterdam'
+    volumes:
+      - '/opt/pihole/etc/pihole:/etc/pihole'
+      - '/opt/pihole/etc/dnsmasq.d:/etc/dnsmasq.d' 
+    restart: unless-stopped  
+
+# Cloudflare
+  cloudflare:
+    container_name: cloudflare
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    network_mode: "host"
+  # token te verkrijgen als je via cloudflare website een nieuwe tunnel aanmaakt. 
+    command: tunnel run --token eyJhIjoiZDNjNzA5ZWZmZGRjMjQ1M2RmOTUzMTc2NTE4NmM4ZmQiLCJ0IjoiYzU5MmFjMDItMTk5NC00OTU2LWIyMWUtYWE2YzEwZDdiZDAzIiwicyI6IllqVmxPVEptWmpFdFl6STRZUzAwTURobUxXSm1ORGd0TmpFek1tWTVaalZsWW1abSJ9
+
+ 
