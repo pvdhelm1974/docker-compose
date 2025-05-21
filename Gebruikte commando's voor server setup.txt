@@ -42,7 +42,7 @@ docker-compose --version
 
 # Geef je gebruikersnaam toegang tot de /opt folder en alle onderliggende folders
 
-chown patrick:patrick opt
+sudo chown patrick:patrick opt
 cd /opt
 
 # Berwerk de docker-compose.yaml file.  (opslaan is 'esc' en daarna ':wq')
