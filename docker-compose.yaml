@@ -61,20 +61,22 @@ services:
       - 8080:8080
     restart: unless-stopped
 
-# PiHole server
-  pihole:
-    container_name: pihole
-    image: pihole/pihole:latest
+# Adguard Home
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
     ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "80:80/tcp"
-    environment:
-      TZ: 'Europe/Amsterdam'
+      - 53:53/tcp
+      - 53:53/udp
+      - 784:784/udp
+      - 853:853/tcp
+      - 3000:3000/tcp
+      - 80:80/tcp
+      - 443:443/tcp
     volumes:
-      - '/opt/pihole/etc/pihole:/etc/pihole'
-      - '/opt/pihole/etc/dnsmasq.d:/etc/dnsmasq.d' 
-    restart: unless-stopped  
+      - ./workdir:/opt/adguardhome/work
+      - ./confdir:/opt/adguardhome/conf
+    restart: unless-stopped 
 
 # Cloudflare
   cloudflare:
