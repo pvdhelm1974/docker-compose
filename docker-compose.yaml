@@ -75,4 +75,21 @@ services:
   # token te verkrijgen als je via cloudflare website een nieuwe tunnel aanmaakt. 
     command: tunnel run --token eyJhIjoiZDNjNzA5ZWZmZGRjMjQ1M2RmOTUzMTc2NTE4NmM4ZmQiLCJ0IjoiYzU5MmFjMDItMTk5NC00OTU2LWIyMWUtYWE2YzEwZDdiZDAzIiwicyI6IllqVmxPVEptWmpFdFl6STRZUzAwTURobUxXSm1ORGd0TmpFek1tWTVaalZsWW1abSJ9
 
+# Adguard Home
+
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    networks:
+      macvlan_adguard:
+        ipv4_address: 192.168.1.252
+    volumes:
+      - /data/adguard/work:/opt/adguardhome/work
+      - /data/adguard/conf:/opt/adguardhome/conf
+    restart: unless-stopped
+
+networks:
+  macvlan_adguard:
+    external: true
+
  
